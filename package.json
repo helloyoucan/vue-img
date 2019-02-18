@@ -1,0 +1,22 @@
+{
+  "name": "vue2-img",
+  "version": "1.0.0",
+  "description": "A img component for vue",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helloyoucan/vue-img.git"
+  },
+  "keywords": [
+    "vue"
+  ],
+  "author": "helloyoucan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/helloyoucan/vue-img/issues"
+  },
+  "homepage": "https://github.com/helloyoucan/vue-img#readme"
+}
