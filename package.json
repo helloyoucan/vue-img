@@ -1,5 +1,5 @@
 {
-  "name": "vue2-img",
+  "name": "@helloyoucan/vue-img",
   "version": "1.0.0",
   "description": "A img component for vue",
   "main": "index.js",
