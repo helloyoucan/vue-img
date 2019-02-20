@@ -1,4 +1,4 @@
-#### @helloyoucan/vue-img
+### @helloyoucan/vue-img
 
 通过npm使用
 
@@ -31,7 +31,7 @@ Vue.component('v-img',vImg)
 
 
 
-##### props
+#### props
 
 ```javascript
 props: {
@@ -65,7 +65,7 @@ props: {
   }
 ```
 
-##### 全局设置（非必要，有内置）
+#### 全局设置（非必要，有内置）
 
 ```javascript
 Vue.prototype.$IMG = {
@@ -84,6 +84,6 @@ Vue.prototype.$IMG = {
 
 ```
 
-##### 效果
+#### 效果
 
 ![效果图](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/vue-img.png)
