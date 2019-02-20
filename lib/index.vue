@@ -58,13 +58,13 @@ export default {
   },
   data() {
     let state = 1 // 0:等待加载 1:加载中 2:加载完成 3:加载失败
-    if (this.lazy && IntersectionObserver) { // 是否启用懒加载并且支持IntersectionObserver
+    if (this.lazy && window.IntersectionObserver!==undefined) { // 是否启用懒加载并且支持IntersectionObserver
       state = 0
     }
     return {
       state, // 组件内置状态
-      imgSrc: this.lazy ? '' : this.src,
-      imgLowSrc: this.lazy ? '' : this.lowSrc,
+      imgSrc: state===0 ? '' : this.src,
+      imgLowSrc: state===0? '' : this.lowSrc,
       observer: null,
       lazySrc: this.src,
       lazyLowSrc: this.lowSrc
