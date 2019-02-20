@@ -1,6 +1,6 @@
 [中文文档](README_zh.md)
 
-#### @helloyoucan/vue-img
+### @helloyoucan/vue-img
 
 Use by npm
 
@@ -33,7 +33,7 @@ Img tag for a layer of packaging, there are three main characteristics
 
 
 
-##### props
+#### props
 
 ```javascript
 props: {
@@ -67,7 +67,7 @@ props: {
   }
 ```
 
-##### Global Settings (not required, built-in)
+#### Global Settings (not required, built-in)
 
 ```javascript
 Vue.prototype.$IMG = {
@@ -80,6 +80,6 @@ Vue.prototype.$IMG = {
 
 ```
 
-##### result
+#### result
 
 ![result image](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/vue-img.png)
