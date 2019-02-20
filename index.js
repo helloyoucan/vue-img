@@ -1,1 +1,2 @@
-module.exports=require('/lib/index.vue')
+import vimg from'./lib/index.vue'
+export default vimg

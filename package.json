@@ -1,22 +1,53 @@
 {
-  "name": "@helloyoucan/vue-img",
-  "version": "1.0.0",
-  "description": "A img component for vue",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_from": "@helloyoucan/vue-img",
+  "_id": "@helloyoucan/vue-img@1.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-iW8FVdn1ZCvMk8DUrklrInJ94lRRS2TrT0T2pWrNUTk0a+SEBkT26N7pevnXIWf3eRDgonuhl7mIdA0gzG8ljA==",
+  "_location": "/@helloyoucan/vue-img",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@helloyoucan/vue-img",
+    "name": "@helloyoucan/vue-img",
+    "escapedName": "@helloyoucan%2fvue-img",
+    "scope": "@helloyoucan",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@helloyoucan/vue-img/-/vue-img-1.0.1.tgz",
+  "_shasum": "66b603ae292ba315f555f89053be3857dc538519",
+  "_spec": "@helloyoucan/vue-img",
+  "_where": "D:\\code\\show-vue-img",
+  "author": {
+    "name": "helloyoucan"
+  },
+  "bugs": {
+    "url": "https://github.com/helloyoucan/vue-img/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A img component for vue",
+  "homepage": "https://github.com/helloyoucan/vue-img#readme",
+  "keywords": [
+    "vue",
+    "component",
+    "img"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "@helloyoucan/vue-img",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/helloyoucan/vue-img.git"
   },
-  "keywords": [
-    "vue"
-  ],
-  "author": "helloyoucan",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/helloyoucan/vue-img/issues"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/helloyoucan/vue-img#readme"
+  "version": "1.0.2"
 }

@@ -1,8 +1,11 @@
 <template>
   <div class="v-img" ref="v-img">
-    <img v-if="loadingImg" ref="loading" :src="loadingImg" alt="加载中..." class="v_i-loading-img">
-    <div v-else ref="loading" class="v_i-loading-icon"></div>
+    <template v-if="state<2">
+      <img v-if="loadingImg" ref="loading" :src="loadingImg" alt="加载中..." class="v_i-loading-img">
+      <div v-else ref="loading" class="v_i-loading-icon"></div>
+    </template>
     <img
+        v-if="state>0"
         class="v_i-target"
         :src="imgSrc"
         :lowsrc="imgLowSrc"
@@ -10,13 +13,17 @@
         :data-src="showSource&&src"
         :data-lowsrc="showSource&&lowSrc"
         @load="handleLoad"
-        @error="handleError($event)">
+        @error="handleError">
   </div>
 </template>
 <script>
-/** 对原生img标签封装一层，处理加载图片失败时的，显示一个默认图片*/
-import defImgSquare from '@/assets/imgs/def_img_square.png'
-
+import Vue from 'vue'
+import defaultErrorImg from '../assets/def_img_square.png'
+const errorImg = Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : defaultErrorImg
+const loadingImg = Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : undefined
+const isLazy = Vue.prototype.$IMG && Vue.prototype.$IMG.lazy ? Vue.prototype.$IMG.lazy : true
+const alt = Vue.prototype.$IMG && Vue.prototype.$IMG.alt ? Vue.prototype.$IMG.alt : undefined
+const showSource = Vue.prototype.$IMG && Vue.prototype.$IMG.showSource ? Vue.prototype.$IMG.showSource : false
 export default {
   name: 'v-img',
   components: {},
@@ -26,25 +33,27 @@ export default {
       default: '#'
     },
     alt: {// img标签的原生属性
-      type: String
+      type: String,
+      default: alt
     },
     lowSrc: {// 图像的低分辨率版本的 URL
       type: String
     },
     loadingImg: {// 加载图片的loading图片
-      type: String
+      type: String,
+      default: loadingImg
     },
     errorSrc: { // 图片加载失败时代替的图片
       type: String,
-      default: defImgSquare
+      default: errorImg
     },
     showSource: { // 是否以date-src的属性显示原图片到dom上
       type: Boolean,
-      default: true
+      default: showSource
     },
     lazy: {// 懒加载
       type: Boolean,
-      default: true
+      default: isLazy
     }
   },
   data() {
@@ -84,13 +93,14 @@ export default {
           this.lowSrc = this.lazyLowSrc
           break
         case 2:
-          this.$refs['loading'] && this.$refs['loading'].remove()
+          // this.$refs['loading'] && this.$refs['loading'].remove()
           break
         case 3:
           this.imgSrc = this.errorSrc
           if (this.imgLowsrc) {
             this.imgLowsrc = this.errorImg
           }
+          //  this.$refs['loading'] && this.$refs['loading'].remove()
           break
       }
     }
@@ -108,7 +118,7 @@ export default {
     }
   },
   methods: {
-    handleError(e) {
+    handleError() {
       if (this.state === 1) {
         this.state = 3
       }
@@ -125,12 +135,14 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style>
   .v-img {
     overflow: hidden;
+    height: 200px;
+    width: 200px;
   }
 
-  .v-img,
+  /* .v-img, */
   .v_i-target,
   .v_i-loading-img,
   .v_i-loading-icon {
@@ -149,23 +161,19 @@ export default {
 
   .v_i-loading-icon {
     position: relative;
-    &:after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: myRotate 1s infinite;
-      width: 15px;
-      height: 15px;
-      border: {
-        top: 4px solid #409EFF;
-        right: 4px solid transparent;
-        bottom: 4px solid #409EFF;
-        left: 4px solid transparent;
-      }
-    ;
-      border-radius: 50%;
-    }
   }
+  .v_i-loading-icon:after {
+     content: '';
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     animation: myRotate 1s infinite;
+     width: 15px;
+     height: 15px;
+     border: 4px solid #409EFF;
+     border-right-color: transparent;
+     border-left-color: transparent;
+     border-radius: 50%;
+   }
 </style>
