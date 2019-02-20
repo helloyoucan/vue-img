@@ -23,13 +23,13 @@ Vue.component('v-img',vImg)
 
 
 
-对img标签进行一层封装，主要有三个特点
+Img tag for a layer of packaging, there are three main characteristics
 
-> 懒加载
+> Lazy loading
 >
-> 图片的loading状态
+> The loading status of the image
 >
-> 加载失败后的处理
+> Handling after load failure
 
 
 
@@ -67,7 +67,7 @@ props: {
   }
 ```
 
-##### 全局设置（非必要，有内置）
+##### Global Settings (not required, built-in)
 
 ```javascript
 Vue.prototype.$IMG = {
@@ -80,6 +80,6 @@ Vue.prototype.$IMG = {
 
 ```
 
-##### 效果
+##### result
 
-![效果图](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/vue-img.png)
+![result image](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/vue-img.png)
