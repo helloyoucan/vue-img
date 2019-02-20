@@ -1,4 +1,4 @@
-[中文文档]()
+[中文文档](README_zh.md)
 
 #### @helloyoucan/vue-img
 
