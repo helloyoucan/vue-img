@@ -10,11 +10,8 @@ vue version：2.0+
 import vImg from '@helloyoucan/vue-img'
 
 Vue.prototype.$IMG = {
-  errorImg:"", //加载时失败后的替换图片，默认使用内置
-  loadingImg:"",//加载中显示的图片，默认使用内置的css-icon
-  lazy:true,//是否使用懒加载，默认true，需要浏览器支持IntersectionObserver（ie不支持）
-  alt:"",//img标签的原生属性alt
-  showSource:true//是否以data-src、data-lowsrc的方式显示源图片（当加载失败时使用）
+  lazy:true,
+  center:true
 }
 Vue.component('v-img',vImg)
 ```
@@ -61,6 +58,10 @@ props: {
     lazy: {// 懒加载
       type: Boolean,
       default: isLazy
+    },
+    center: { // 是否根据图片尺寸垂直居中或者水平居中
+      type: Boolean,
+      default: center
     }
   }
 ```
@@ -69,17 +70,12 @@ props: {
 
 ```javascript
 Vue.prototype.$IMG = {
-
   errorImg:"", //加载时失败后的替换图片，默认使用内置
-
   loadingImg:"",//加载中显示的图片，默认使用内置的css-icon
-
   lazy:true,//是否使用懒加载，默认true，需要浏览器支持IntersectionObserver（ie不支持）
-
   alt:"",//img标签的原生属性alt
-
-  showSource:true//是否以data-src、data-lowsrc的方式显示源图片（当加载失败时使用）
-
+  showSource:false,//是否以data-src、data-lowsrc的方式显示源图片（当加载失败时使用）
+  center: false // 是否根据图片尺寸垂直居中或者水平居中
 }
 
 ```

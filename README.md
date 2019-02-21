@@ -1,4 +1,4 @@
-[中文文档](README_zh.md)
+[查看中文文档](README_zh.md)
 
 ### @helloyoucan/vue-img
 
@@ -12,11 +12,8 @@ vue version：2.0+
 import vImg from '@helloyoucan/vue-img'
 
 Vue.prototype.$IMG = {
-  errorImg:"", //Replace images after failed loading, default to built-in
-  loadingImg:"",//For images displayed during loading, the built-in css-icon is used by default
-  lazy:true,//Whether to use lazy loading or not, the default is true, which requires the browser to support IntersectionObserver (ie does not support).
-  alt:"",//The native Alt attribute of the img tag
-  showSource:true//Whether to display the source image as data-src, data-lowsrc (used when loading fails)
+  lazy:false,
+  center:true
 }
 Vue.component('v-img',vImg)
 ```
@@ -63,6 +60,10 @@ props: {
     lazy: {// Lazy loading
       type: Boolean,
       default: isLazy
+    },
+    center: { // Whether to center vertically or horizontally according to picture size
+      type: Boolean,
+      default: center
     }
   }
 ```
@@ -73,9 +74,10 @@ props: {
 Vue.prototype.$IMG = {
   errorImg:"", //Replace images after failed loading, default to built-in
   loadingImg:"",//For images displayed during loading, the built-in css-icon is used by default
-  lazy:true,//Whether to use lazy loading or not, the default is true, which requires the browser to support IntersectionObserver (ie does not support).
+  lazy:false,//Whether to use lazy loading or not, the default is false, which requires the browser to support IntersectionObserver (ie does not support).
   alt:"",//The native Alt attribute of the img tag
-  showSource:true//Whether to display the source image as data-src, data-lowsrc (used when loading fails)
+  showSource:false,//Whether to display the source image as data-src, data-lowsrc,,the default is false (used when loading fails)
+  center:false//Whether to center vertically or horizontally according to picture size,the default is false
 }
 
 ```

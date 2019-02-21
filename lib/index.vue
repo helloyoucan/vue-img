@@ -7,6 +7,8 @@
     <img
         v-if="state>0"
         class="v_i-target"
+        :class="{center:center,loading:this.state===1}"
+        :style="imgStyle"
         :src="imgSrc"
         :lowsrc="imgLowSrc"
         :alt="alt"
@@ -21,9 +23,10 @@ import Vue from 'vue'
 import defaultErrorImg from '../assets/def_img_square.png'
 const errorImg = Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : defaultErrorImg
 const loadingImg = Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : undefined
-const isLazy = Vue.prototype.$IMG && Vue.prototype.$IMG.lazy ? Vue.prototype.$IMG.lazy : true
+const isLazy = Vue.prototype.$IMG && Vue.prototype.$IMG.lazy ? Vue.prototype.$IMG.lazy : false
 const alt = Vue.prototype.$IMG && Vue.prototype.$IMG.alt ? Vue.prototype.$IMG.alt : undefined
 const showSource = Vue.prototype.$IMG && Vue.prototype.$IMG.showSource ? Vue.prototype.$IMG.showSource : false
+const center = Vue.prototype.$IMG && Vue.prototype.$IMG.center ? Vue.prototype.$IMG.center : false
 export default {
   name: 'v-img',
   components: {},
@@ -54,20 +57,25 @@ export default {
     lazy: {// 懒加载
       type: Boolean,
       default: isLazy
+    },
+    center: { // 是否根据图片尺寸垂直居中或者水平居中
+      type: Boolean,
+      default: center
     }
   },
   data() {
     let state = 1 // 0:等待加载 1:加载中 2:加载完成 3:加载失败
-    if (this.lazy && window.IntersectionObserver!==undefined) { // 是否启用懒加载并且支持IntersectionObserver
+    if (this.lazy && window.IntersectionObserver !== undefined) { // 是否启用懒加载并且支持IntersectionObserver
       state = 0
     }
     return {
       state, // 组件内置状态
-      imgSrc: state===0 ? '' : this.src,
-      imgLowSrc: state===0? '' : this.lowSrc,
+      imgSrc: state === 0 ? '' : this.src,
+      imgLowSrc: state === 0 ? '' : this.lowSrc,
       observer: null,
       lazySrc: this.src,
-      lazyLowSrc: this.lowSrc
+      lazyLowSrc: this.lowSrc,
+      imgStyle: {}
     }
   },
   watch: {
@@ -105,7 +113,8 @@ export default {
       }
     }
   },
-  created() {},
+  created() {
+  },
   mounted() {
     if (this.state === 0) {
       this.observer = new IntersectionObserver(([entry]) => {
@@ -125,6 +134,14 @@ export default {
     },
     handleLoad() {
       if (this.state === 1) {
+        if (this.center) {
+          const $el_img = this.$refs['v-img'].querySelector('.v_i-target')
+          if ($el_img.clientWidth > $el_img.clientHeight) {
+            this.imgStyle = { width: 'auto', height: '100%' }
+          } else {
+            this.imgStyle = { width: '100%', height: 'auto' }
+          }
+        }
         this.state = 2
       }
     }
@@ -136,12 +153,27 @@ export default {
 </script>
 
 <style>
+  .v-img {
+    position: relative;
+  }
+
   .v-img,
   .v_i-target,
   .v_i-loading-img,
   .v_i-loading-icon {
     width: 100%;
     height: 100%;
+  }
+
+  .v_i-target.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .v_i-target.loading {
+    opacity: 0;
   }
 
   @keyframes myRotate {
@@ -156,18 +188,19 @@ export default {
   .v_i-loading-icon {
     position: relative;
   }
+
   .v_i-loading-icon:after {
-     content: '';
-     position: absolute;
-     top: 50%;
-     left: 50%;
-     transform: translate(-50%, -50%);
-     animation: myRotate 1s infinite;
-     width: 15px;
-     height: 15px;
-     border: 4px solid #409EFF;
-     border-right-color: transparent;
-     border-left-color: transparent;
-     border-radius: 50%;
-   }
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: myRotate 1s infinite;
+    width: 15px;
+    height: 15px;
+    border: 4px solid #409EFF;
+    border-right-color: transparent;
+    border-left-color: transparent;
+    border-radius: 50%;
+  }
 </style>
