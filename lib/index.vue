@@ -136,13 +136,7 @@ export default {
 </script>
 
 <style>
-  .v-img {
-    overflow: hidden;
-    height: 200px;
-    width: 200px;
-  }
-
-  /* .v-img, */
+  .v-img,
   .v_i-target,
   .v_i-loading-img,
   .v_i-loading-icon {
