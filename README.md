@@ -64,6 +64,10 @@ props: {
     center: { // Whether to center vertically or horizontally according to picture size
       type: Boolean,
       default: center
+    },
+    ratio: {// When center===true, it is used to compare the difference between the original size of the image and the width/height of the rendering size, and then set the width or height of the image as the basis of auto
+      type: Number,
+      default: 1
     }
   }
 ```

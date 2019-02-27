@@ -62,6 +62,10 @@ props: {
     center: { // 是否根据图片尺寸垂直居中或者水平居中
       type: Boolean,
       default: center
+    },
+    ratio: {// 比例差系数，用于center===true时，用于图片原生尺寸和渲染尺寸的width/height比例的差值对比然后去设置图片的width或者height为auto的依据
+      type: Number,
+      default: 1
     }
   }
 ```
