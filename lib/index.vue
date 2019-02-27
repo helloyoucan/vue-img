@@ -1,5 +1,5 @@
 <template>
-  <div class="v-img" ref="v-img">
+  <div class="v-img">
     <template v-if="state<2">
       <img v-if="loadingImg" ref="loading" :src="loadingImg" alt="加载中..." class="v_i-loading-img">
       <div v-else ref="loading" class="v_i-loading-icon"></div>
@@ -21,12 +21,7 @@
 <script>
 import Vue from 'vue'
 import defaultErrorImg from '../assets/def_img_square.png'
-const errorImg = Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : defaultErrorImg
-const loadingImg = Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : undefined
-const isLazy = Vue.prototype.$IMG && Vue.prototype.$IMG.lazy ? Vue.prototype.$IMG.lazy : false
-const alt = Vue.prototype.$IMG && Vue.prototype.$IMG.alt ? Vue.prototype.$IMG.alt : undefined
-const showSource = Vue.prototype.$IMG && Vue.prototype.$IMG.showSource ? Vue.prototype.$IMG.showSource : false
-const center = Vue.prototype.$IMG && Vue.prototype.$IMG.center ? Vue.prototype.$IMG.center : false
+
 export default {
   name: 'v-img',
   components: {},
@@ -37,30 +32,46 @@ export default {
     },
     alt: {// img标签的原生属性
       type: String,
-      default: alt
+      default: function() {
+        return Vue.prototype.$IMG && Vue.prototype.$IMG.alt ? Vue.prototype.$IMG.alt : undefined
+      }
     },
     lowSrc: {// 图像的低分辨率版本的 URL
       type: String
     },
     loadingImg: {// 加载图片的loading图片
       type: String,
-      default: loadingImg
+      default: function() {
+        return Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : undefined
+      }
     },
     errorSrc: { // 图片加载失败时代替的图片
       type: String,
-      default: errorImg
+      default: function() {
+        return Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : defaultErrorImg
+      }
     },
     showSource: { // 是否以date-src的属性显示原图片到dom上
       type: Boolean,
-      default: showSource
+      default: function() {
+        return Vue.prototype.$IMG && Vue.prototype.$IMG.showSource ? Vue.prototype.$IMG.showSource : false
+      }
     },
     lazy: {// 懒加载
       type: Boolean,
-      default: isLazy
+      default: function() {
+        return Vue.prototype.$IMG && Vue.prototype.$IMG.lazy ? Vue.prototype.$IMG.lazy : false
+      }
     },
     center: { // 是否根据图片尺寸垂直居中或者水平居中
       type: Boolean,
-      default: center
+      default: function() {
+        return Vue.prototype.$IMG && Vue.prototype.$IMG.center ? Vue.prototype.$IMG.center : false
+      }
+    },
+    ratio: {// 比例差系数，用于center===true时，用于图片原生尺寸和渲染尺寸的width/height比例的差值对比然后去设置图片的width或者height为auto的依据
+      type: Number,
+      default: 1
     }
   },
   data() {
@@ -134,13 +145,19 @@ export default {
     },
     handleLoad() {
       if (this.state === 1) {
+        const $el_img = this.$el.querySelector('.v_i-target')
         if (this.center) {
-          const $el_img = this.$refs['v-img'].querySelector('.v_i-target')
-          if ($el_img.clientWidth > $el_img.clientHeight) {
+          const width_ratio = $el_img.naturalWidth / $el_img.width
+          const height_ratio = $el_img.naturalHeight / $el_img.height
+          if (width_ratio - height_ratio > this.ratio) {
+            this.imgStyle = { width: '100%', height: 'auto' }
+          } else if (height_ratio - width_ratio > this.ratio) {
             this.imgStyle = { width: 'auto', height: '100%' }
           } else {
-            this.imgStyle = { width: '100%', height: 'auto' }
+            this.imgStyle = { width: '100%', height: '100%' }
           }
+        } else {
+          this.imgStyle = { width: '100%', height: '100%' }
         }
         this.state = 2
       }
