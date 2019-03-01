@@ -1,5 +1,5 @@
 <template>
-  <div class="v-img">
+  <div class="v-img" :style="{width:width,height:height}">
     <template v-if="state<2">
       <img v-if="loadingImg" ref="loading" :src="loadingImg" alt="加载中..." class="v_i-loading-img">
       <div v-else ref="loading" class="v_i-loading-icon"></div>
@@ -10,10 +10,8 @@
         :class="{center:center,loading:this.state===1}"
         :style="imgStyle"
         :src="imgSrc"
-        :lowsrc="imgLowSrc"
         :alt="alt"
         :data-src="showSource&&src"
-        :data-lowsrc="showSource&&lowSrc"
         @load="handleLoad"
         @error="handleError">
   </div>
@@ -26,6 +24,12 @@ export default {
   name: 'v-img',
   components: {},
   props: {
+    width:{
+      type:String,
+    },
+    height:{
+      type:String,
+    },
     src: { // 图片路径
       type: String,
       default: '#'
@@ -33,75 +37,73 @@ export default {
     alt: {// img标签的原生属性
       type: String,
       default: function() {
-        return Vue.prototype.$IMG && Vue.prototype.$IMG.alt ? Vue.prototype.$IMG.alt : undefined
+        return (Vue.prototype.$IMG||{}).alt
       }
-    },
-    lowSrc: {// 图像的低分辨率版本的 URL
-      type: String
     },
     loadingImg: {// 加载图片的loading图片
       type: String,
       default: function() {
-        return Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : undefined
+        return (Vue.prototype.$IMG||{}).loadingImg
       }
     },
     errorSrc: { // 图片加载失败时代替的图片
       type: String,
-      default: function() {
-        return Vue.prototype.$IMG && Vue.prototype.$IMG.errorImg ? Vue.prototype.$IMG.errorImg : defaultErrorImg
+      default() {
+        return Vue.prototype.$IMG&&Vue.prototype.$IMG.errorSrc
+        ?Vue.prototype.$IMG.errorSrc:defaultErrorImg
       }
     },
     showSource: { // 是否以date-src的属性显示原图片到dom上
       type: Boolean,
-      default: function() {
-        return Vue.prototype.$IMG && Vue.prototype.$IMG.showSource ? Vue.prototype.$IMG.showSource : false
+      default() {
+        return Vue.prototype.$IMG&&Vue.prototype.$IMG.showSource
+        ?Vue.prototype.$IMG.showSource:false
       }
     },
     lazy: {// 懒加载
       type: Boolean,
-      default: function() {
-        return Vue.prototype.$IMG && Vue.prototype.$IMG.lazy ? Vue.prototype.$IMG.lazy : false
+      default() {
+        return Vue.prototype.$IMG&&Vue.prototype.$IMG.lazy
+        ?Vue.prototype.$IMG.lazy:false
       }
     },
     center: { // 是否根据图片尺寸垂直居中或者水平居中
       type: Boolean,
-      default: function() {
-        return Vue.prototype.$IMG && Vue.prototype.$IMG.center ? Vue.prototype.$IMG.center : false
+      default() {
+        return Vue.prototype.$IMG&&Vue.prototype.$IMG.center
+        ?Vue.prototype.$IMG.center:false
       }
     },
-    ratio: {// 比例差系数，用于center===true时，用于图片原生尺寸和渲染尺寸的width/height比例的差值对比然后去设置图片的width或者height为auto的依据
+    ratio: {// 比例系数，用于center===true时，用于图片原生尺寸和渲染尺寸的width/height比例的差值对比然后去设置图片的width或者height为auto的依据
       type: Number,
-      default: 1
+      default() {
+        return Vue.prototype.$IMG&&Vue.prototype.$IMG.ratio
+        ?Vue.prototype.$IMG.ratio:0
+      }
     }
   },
   data() {
-    let state = 1 // 0:等待加载 1:加载中 2:加载完成 3:加载失败
+    let state = 1 // 0:懒加载等待加载 1:加载中 2:加载完成 3:加载失败
     if (this.lazy && window.IntersectionObserver !== undefined) { // 是否启用懒加载并且支持IntersectionObserver
       state = 0
     }
     return {
       state, // 组件内置状态
       imgSrc: state === 0 ? '' : this.src,
-      imgLowSrc: state === 0 ? '' : this.lowSrc,
       observer: null,
       lazySrc: this.src,
-      lazyLowSrc: this.lowSrc,
       imgStyle: {}
     }
   },
   watch: {
-    src(val) {
-      if (this.state > 0) {
-        this.imgSrc = val
-      } else {
-        this.lazySrc = val
+    src(newVal) {
+      this.lazySrc = newVal
+      if(this.state = 1){
+        this.lazySrc = newVal
+        this.imgSrc = newVal
       }
-    },
-    lowSrc(val) {
-      if (this.state > 0) {
-        this.imgLowSrc = val
-      } else {
-        this.lazyLowSrc = val
+      if(this.state>1){ //不在懒加载等待状态
+        this.state = 1
       }
     },
     state(val) {
@@ -109,22 +111,14 @@ export default {
       switch (val) {
         case 1:
           this.imgSrc = this.lazySrc
-          this.lowSrc = this.lazyLowSrc
           break
         case 2:
-          // this.$refs['loading'] && this.$refs['loading'].remove()
           break
         case 3:
           this.imgSrc = this.errorSrc
-          if (this.imgLowsrc) {
-            this.imgLowsrc = this.errorImg
-          }
-          //  this.$refs['loading'] && this.$refs['loading'].remove()
           break
       }
     }
-  },
-  created() {
   },
   mounted() {
     if (this.state === 0) {
@@ -132,6 +126,7 @@ export default {
         if (entry && entry.isIntersecting) {
           this.state = 1
           this.observer.unobserve(entry.target)
+          this.observer.disconnect()
         }
       })
       this.observer.observe(this.$el)
@@ -145,20 +140,20 @@ export default {
     },
     handleLoad() {
       if (this.state === 1) {
-        const $el_img = this.$el.querySelector('.v_i-target')
-        if (this.center) {
-          const width_ratio = $el_img.naturalWidth / $el_img.width
-          const height_ratio = $el_img.naturalHeight / $el_img.height
-          if (width_ratio - height_ratio > this.ratio) {
-            this.imgStyle = { width: '100%', height: 'auto' }
-          } else if (height_ratio - width_ratio > this.ratio) {
-            this.imgStyle = { width: 'auto', height: '100%' }
-          } else {
-            this.imgStyle = { width: '100%', height: '100%' }
-          }
-        } else {
-          this.imgStyle = { width: '100%', height: '100%' }
+         //加载失败时不做居中处理
+        if(this.center){
+            const $el_img = this.$el.querySelector('.v_i-target')
+            const width_ratio = $el_img.naturalWidth / this.$el.clientWidth
+            const height_ratio = $el_img.naturalHeight / this.$el.clientHeight
+            if (width_ratio - height_ratio > this.ratio) {
+              this.imgStyle = { width: '100%', height: 'auto' }
+            } else if (height_ratio - width_ratio > this.ratio) {
+              this.imgStyle = { width: 'auto', height: '100%' }
+            } else {
+              this.imgStyle = { width: '100%', height: '100%' }
+            }
         }
+        //先调整居中位置，再显示图片
         this.state = 2
       }
     }
@@ -174,7 +169,7 @@ export default {
     position: relative;
   }
 
-  .v-img,
+  /* .v-img, */
   .v_i-target,
   .v_i-loading-img,
   .v_i-loading-icon {
@@ -187,6 +182,8 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /* max-width: 100%; */
+    /* max-height: 100%; */
   }
 
   .v_i-target.loading {
@@ -211,12 +208,16 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+    -webkit-animation: myRotate 1s infinite;
     animation: myRotate 1s infinite;
-    width: 15px;
-    height: 15px;
-    border: 4px solid #409EFF;
-    border-right-color: transparent;
+    width: 30px;
+    height: 30px;
+    max-width: 100%;
+    max-height: 100%;
+    border: 2px solid #409EFF;
+    /* border-right-color: transparent; */
     border-left-color: transparent;
     border-radius: 50%;
   }

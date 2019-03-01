@@ -37,35 +37,30 @@ props: {
       default: '#'
     },
     alt: {// img标签的原生属性
-      type: String,
-      default: alt
-    },
-    lowSrc: {// 图像的低分辨率版本的 URL
       type: String
     },
     loadingImg: {// 加载图片的loading图片
-      type: String,
-      default: loadingImg
+      type: String
     },
     errorSrc: { // 图片加载失败时代替的图片
       type: String,
-      default: errorImg
+      default: 'xxx'
     },
     showSource: { // 是否以date-src的属性显示原图片到dom上
       type: Boolean,
-      default: showSource
+      default: false
     },
     lazy: {// 懒加载
       type: Boolean,
-      default: isLazy
+      default: false
     },
     center: { // 是否根据图片尺寸垂直居中或者水平居中
       type: Boolean,
-      default: center
+      default: false
     },
     ratio: {// 比例差系数，用于center===true时，用于图片原生尺寸和渲染尺寸的width/height比例的差值对比然后去设置图片的width或者height为auto的依据
       type: Number,
-      default: 1
+      default: 0
     }
   }
 ```
@@ -74,12 +69,12 @@ props: {
 
 ```javascript
 Vue.prototype.$IMG = {
-  errorImg:"", //加载时失败后的替换图片，默认使用内置
-  loadingImg:"",//加载中显示的图片，默认使用内置的css-icon
-  lazy:true,//是否使用懒加载，默认true，需要浏览器支持IntersectionObserver（ie不支持）
-  alt:"",//img标签的原生属性alt
-  showSource:false,//是否以data-src、data-lowsrc的方式显示源图片（当加载失败时使用）
-  center: false // 是否根据图片尺寸垂直居中或者水平居中
+  errorImg:"", 
+  loadingImg:"",
+  lazy:true,
+  alt:"",
+  showSource:false,
+  center: false
 }
 
 ```
