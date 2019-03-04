@@ -98,7 +98,7 @@ export default {
   watch: {
     src(newVal) {
       this.lazySrc = newVal
-      if(this.state = 1){
+      if(this.state === 1){
         this.lazySrc = newVal
         this.imgSrc = newVal
       }
