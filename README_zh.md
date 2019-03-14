@@ -7,6 +7,7 @@
 vue version：2.0+
 
 ```javascript
+//main.js
 import vImg from '@helloyoucan/vue-img'
 
 Vue.prototype.$IMG = {
@@ -14,6 +15,11 @@ Vue.prototype.$IMG = {
   center:true
 }
 Vue.component('v-img',vImg)
+
+```
+//APP.vue
+```
+<v-img :src="imgSrc @load="handleLoad" @error="handleError" />
 ```
 
 
@@ -81,4 +87,5 @@ Vue.prototype.$IMG = {
 
 #### 效果
 
-![效果图](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/vue-img.png)
+![result image](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/0roocard.gif)
+![result image](https://github-1252517012.cos.ap-guangzhou.myqcloud.com/vue-img/vue-img.png)
